@@ -10,6 +10,7 @@ const {
   emits,
   nodesSelectionActive,
   userSelectionActive,
+  selectionModeEnabled,
   multiSelectionActive,
   elementsSelectable,
   getNodes,
@@ -73,6 +74,8 @@ const selectionKeyPressed = useKeyPress(selectionKeyCode, (keyPressed) => {
 
   userSelectionActive.value = keyPressed && elementsSelectable.value
 })
+
+const selectionEnabled = computed(() => selectionKeyPressed.value || selectionModeEnabled.value)
 </script>
 
 <script lang="ts">
@@ -83,7 +86,7 @@ export default {
 </script>
 
 <template>
-  <UserSelection v-if="selectionKeyPressed && userSelectionActive" />
+  <UserSelection v-if="selectionEnabled" />
   <NodesSelection v-if="nodesSelectionActive" />
   <div
     :key="`pane-${id}`"

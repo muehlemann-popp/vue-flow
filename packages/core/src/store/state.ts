@@ -70,6 +70,7 @@ const defaultState = (): State => ({
 
   nodesSelectionActive: false,
   userSelectionActive: false,
+  selectionModeEnabled: true,
 
   defaultMarkerColor: '#b1b1b7',
   connectionLineStyle: {},

@@ -60,6 +60,7 @@ export interface State extends Omit<FlowOptions, 'id' | 'modelValue'> {
   /** if true will skip rendering any elements currently not inside viewport until they become visible */
   onlyRenderVisibleElements: boolean
   nodesSelectionActive: boolean
+  selectionModeEnabled: boolean
   userSelectionActive: boolean
   multiSelectionActive: boolean
 

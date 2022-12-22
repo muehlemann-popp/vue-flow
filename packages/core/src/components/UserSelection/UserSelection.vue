@@ -20,6 +20,14 @@ const initialRect = () => ({
 })
 
 let rect = $ref<Rect>(initialRect())
+let mousedownAt = $ref<Number>(0)
+const CLICK_THRESHOLD_TIME = 100 // mousedown followed by mouseup in less than this threshold counts as click
+const CLICK_THRESHOLD_DISTANCE = 10
+
+const isClick = () => {
+  const time = new Date().getTime()
+  return time - mousedownAt.valueOf() < CLICK_THRESHOLD_TIME && Math.max(rect.width, rect.height) < CLICK_THRESHOLD_DISTANCE
+}
 
 const reset = () => {
   rect = initialRect()
@@ -32,6 +40,7 @@ const reset = () => {
 const onMouseDown = (event: MouseEvent) => {
   const mousePos = getMousePosition(event)
   if (!mousePos) return
+  mousedownAt = new Date().getTime()
 
   rect = {
     width: 0,
@@ -74,11 +83,18 @@ const onMouseMove = (event: MouseEvent) => {
   prevEdges = selectedEdges.length
 }
 
+const onClick = () => {
+  // we need to clear selection on click
+  nodesSelectionActive.value = false
+}
 const onMouseUp = () => {
+  if (isClick()) {
+    onClick()
+  } else {
+    nodesSelectionActive.value = prevNodes > 0
+    userSelectionActive.value = false
+  }
   rect = initialRect()
-
-  nodesSelectionActive.value = prevNodes > 0
-  userSelectionActive.value = false
 }
 
 onBeforeUnmount(reset)
@@ -91,13 +107,7 @@ export default {
 </script>
 
 <template>
-  <div
-    class="vue-flow__selectionpane vue-flow__container"
-    @mousedown="onMouseDown"
-    @mousemove="onMouseMove"
-    @click="onMouseUp"
-    @mouseup="onMouseUp"
-  >
+  <div class="vue-flow__selectionpane vue-flow__container" @mousedown="onMouseDown" @mousemove="onMouseMove" @mouseup="onMouseUp">
     <SelectionRect v-if="rect.draw" :width="rect.width" :height="rect.height" :x="rect.x" :y="rect.y" />
   </div>
 </template>

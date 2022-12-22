@@ -16,6 +16,7 @@ const {
   dimensions,
   zoomActivationKeyCode,
   selectionKeyCode,
+  selectionModeEnabled,
   panOnScroll,
   panOnScrollMode,
   panOnScrollSpeed,
@@ -211,7 +212,7 @@ onMounted(() => {
     if (!panOnDrag && !zoomScroll && !panOnScroll && !zoomOnDoubleClick && !zoomOnPinch) return false
 
     // during a selection we prevent all other interactions
-    if (selectionKeyPressed.value && selectionKeyCode !== true) return false
+    if (selectionModeEnabled || (selectionKeyPressed.value && selectionKeyCode !== true)) return false
 
     // if zoom on double click is disabled, we prevent the double click event
     if (!zoomOnDoubleClick && event.type === 'dblclick') return false
